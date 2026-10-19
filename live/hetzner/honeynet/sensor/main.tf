@@ -48,8 +48,12 @@ module "sensor" {
   labels          = local.sensor_labels
 }
 
-resource "hcloud_volume_attachment" "sensor_logs" {
-  volume_id = data.hcloud_volume.sensor_logs.id
+module "sensor_log_volume" {
+  source = "../../../../modules/hcloud_volume"
+
+  name      = var.sensor_log_volume_name
+  size      = var.sensor_log_volume_size
+  location  = var.location
   server_id = module.sensor.server_id
-  automount = false
+  labels    = local.sensor_labels
 }

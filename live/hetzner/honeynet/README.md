@@ -123,12 +123,12 @@ Do the [prerequisites](../../../README.md#prerequisites) first. The Honeynet kee
 
    ```sh
    make init
-   make apply      # storage, network, sensor, honeypots
+   make apply      # network, sensor, honeypots
    make configure  # writes the inventory, runs site.yml
    make verify     # runs verify.yml
    ```
 
-`make destroy` removes the roots in the reverse order. It does not remove `bootstrap` or `storage`.
+`make destroy` removes the roots in the reverse order. It does not remove `bootstrap`. It stops at the `sensor` root because the Log Volume has delete protection. See [Rules](#rules).
 
 ## Operation
 
@@ -148,8 +148,8 @@ Do the [prerequisites](../../../README.md#prerequisites) first. The Honeynet kee
 - To add a honeypot port, add it to `honeypot_tcp_ports` in the Sensor root. If the port is below 1024, also map it in `TF_VAR_honeypot_port_redirects` in the Makefile.
 - Do not open Containment. Send new outbound protocols to the Sinkhole.
 - The Honeynet collects no malware samples.
-- The Log Volume has delete protection. To delete it, set `delete_protection = false` in `storage`, apply, then run `make destroy-storage`.
-- The Log Volume and the Sensor must be in the same location.
+- The Log Volume has delete protection. To destroy the Sensor and keep the logs, run `terraform -chdir=sensor state rm module.sensor_log_volume.hcloud_volume.this` before `make destroy`. Before the next `make apply`, import it again with `terraform -chdir=sensor import module.sensor_log_volume.hcloud_volume.this <volume_id>`.
+- To delete the Log Volume, set `delete_protection = false` on the `sensor_log_volume` module, apply, then run `make destroy`.
 - Every banner and identity comes from `honeypot_persona` in `ansible/playbooks/group_vars/all.yml`. Do not set a banner in a role.
 
 ## Decisions

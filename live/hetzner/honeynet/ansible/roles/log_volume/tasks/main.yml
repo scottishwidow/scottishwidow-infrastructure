@@ -8,9 +8,8 @@
   ansible.builtin.assert:
     that: log_volume_device_state.stat.exists
     fail_msg: >-
-      {{ log_volume_device }} is missing on the Sensor. The Log Volume comes from
-      live/hetzner/honeynet/storage and its attachment from live/hetzner/honeynet/sensor.
-      Apply both roots, then run make configure again.
+      {{ log_volume_device }} is missing on the Sensor. The Log Volume and its attachment
+      come from live/hetzner/honeynet/sensor. Apply that root, then run make configure again.
     quiet: true
 
 - name: Write the Log Volume mount unit

@@ -18,12 +18,11 @@ that nothing outside it trusts it.
 
 ## Decision
 
-- **A Hetzner Volume, the Log Volume, holds the Sensor logs.** A separate
-  Terraform root, `storage`, creates it with `format = "ext4"` and
-  `delete_protection = true`. The `sensor` root attaches it with
-  `automount = false`.
-- **`make apply` applies `storage` first. `make destroy` does not destroy it**,
-  in the same way as `bootstrap`.
+- **A Hetzner Volume, the Log Volume, holds the Sensor logs.** The `sensor`
+  root creates and attaches it through the `modules/hcloud_volume` module, with
+  `format = "ext4"`, `automount = false` and `delete_protection = true`.
+- **The volume and its attachment are separate resources from the server.**
+  When Terraform replaces the Sensor, it replaces only the attachment.
 - **Ansible mounts the Log Volume at `/srv/honeynet`** with systemd mount
   units. Bind mounts put `/srv/honeynet/suricata` on `/var/log/suricata` and
   `/srv/honeynet/evebox` on `/var/lib/evebox`. The paths that Suricata,
@@ -51,10 +50,13 @@ breaks ADR-0013.
 - In IPS mode, when Suricata does not start, the `queue bypass` rule makes the
   Sensor fail open (ADR-0014). In IDS mode, Suricata sees no traffic until the
   Log Volume is back.
-- To delete the Log Volume, first set `delete_protection = false` and apply.
+- Delete protection stops `make destroy` at the `sensor` root. To keep the
+  Log Volume, remove it from the state with `terraform state rm` before the
+  destroy, and import it again before the next apply. To delete it, first set
+  `delete_protection = false` and apply.
 - The Log Volume costs money while no server has it.
 - The Log Volume is in the same Hetzner project and location as the Sensor. It
   is not an off-site copy. Root on the Sensor can still delete the logs.
-- The Log Volume must be in the same location as the Sensor.
+- The Log Volume uses the location of the Sensor, so they cannot differ.
 - The first run leaves the old logs on the root disk, under the bind mounts.
   They go away with the next Sensor replacement.

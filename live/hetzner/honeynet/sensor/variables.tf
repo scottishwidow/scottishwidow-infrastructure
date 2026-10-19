@@ -11,9 +11,15 @@ variable "ssh_key_name" {
 }
 
 variable "sensor_log_volume_name" {
-  description = "Name of the Log Volume that the storage root creates"
+  description = "Name of the Log Volume"
   type        = string
   default     = "sensor-logs"
+}
+
+variable "sensor_log_volume_size" {
+  description = "Size of the Log Volume in GB"
+  type        = number
+  default     = 50
 }
 
 variable "admin_cidrs" {
