@@ -5,7 +5,7 @@
   },
   "enableAllProjectMcpServers": true,
   "enabledPlugins": {
-    "terraform-skill@antonbabenko": true,
-    "code-intelligence@antonbabenko": true
+    "code-intelligence@antonbabenko": true,
+    "terraform-skill@antonbabenko": true
   }
 }
