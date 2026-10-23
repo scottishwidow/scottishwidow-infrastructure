@@ -7,7 +7,11 @@
 - [OVPN](./live/hetzner/ovpn/CONTEXT.md) — the `ovpn` Hetzner Cloud environment:
   the Gateway and the Private Hosts behind it.
 - [Honeynet](./live/hetzner/honeynet/CONTEXT.md) — the `honeynet` environment: Honeypots
-  that attract attacks for Suricata to inspect.
+  that attract attacks for Suricata to inspect, and the Corpus and Hunt Host that hunt the
+  telemetry they produce. The environment spans two directories: `live/hetzner/honeynet/`
+  holds the Hetzner roots and the `CONTEXT.md`, and `live/aws/honeynet/` holds the AWS roots.
+  `live/aws/honeynet/` is a logical environment inside the shared AWS account. There is no
+  `honeynet` AWS account. See [ADR-0018](./docs/adr/0018-the-corpus-is-an-s3-bucket-in-the-shared-aws-account.md).
 - **IaC security triage — archived.** The pipeline that scanned the Terraform for
   misconfigurations, assigned each finding a verdict with a rationale, and proposed
   a patch where a human asked for one. It was a proof of concept, it worked, and its
@@ -17,12 +21,22 @@
 
 ## Relationships
 
-- **Honeynet → nothing**: the Honeynet shares no network, Hetzner project, Hetzner
-  token or SSH key with any other context. Nothing in another context may route to
+- **Honeynet → nothing inbound**: the Honeynet shares no network, Hetzner project,
+  Hetzner token or SSH key with any other context. Nothing in another context may route to
   it or trust it.
+- **Honeynet → Corpus (write only)**: the Sensor ships Suricata telemetry and Honeypot
+  Session Evidence to the Corpus, an S3 bucket in the shared AWS account. The Sensor can
+  write and cannot read or delete, and it holds no long-lived credential — IAM Roles
+  Anywhere issues short-lived ones, conditioned on the Sensor address. This replaces the
+  earlier reading that the Honeynet shares nothing but state.
+  See [ADR-0019](./docs/adr/0019-the-sensor-holds-no-long-lived-aws-credential.md).
+- **Hunt Host → Corpus (read only)**: the Hunt Host reads the Corpus through its instance
+  profile. No reader credential exists. It has its own VPC and shares no network with
+  Nextcloud, because it parses content an attacker controls.
 - **Honeynet → OVPN (state only)**: the Honeynet keeps its state files under
   their own keys in the Hetzner state bucket, which the OVPN bootstrap creates.
-  The OVPN bootstrap must exist first. This is the only shared resource.
+  The OVPN bootstrap must exist first. The state bucket and the Corpus are the only
+  shared resources, and both live in the one AWS account.
 
 - **Terraform → Ansible**: Terraform (`live/aws/management/nextcloud/`) provisions
   the instance and supporting resources (EIP, backup policy, SSM scratch bucket);

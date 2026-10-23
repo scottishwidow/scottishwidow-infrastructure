@@ -18,11 +18,17 @@ This is a multi-context repo (monorepo). `CONTEXT-MAP.md` at the root points to 
 ├── CONTEXT-MAP.md
 ├── docs/adr/                          ← all decisions
 └── live/
-    ├── aws/management/CONTEXT.md      ← Management domain language
+    ├── aws/
+    │   ├── management/CONTEXT.md      ← Management domain language
+    │   └── honeynet/                  ← Honeynet AWS roots (no CONTEXT.md)
     └── hetzner/
         ├── ovpn/CONTEXT.md            ← OVPN domain language
         └── honeynet/CONTEXT.md        ← Honeynet domain language
 ```
+
+One context can span two provider directories. The Honeynet keeps one `CONTEXT.md`, in
+`live/hetzner/honeynet/`, and it covers `live/aws/honeynet/` as well. Read `CONTEXT-MAP.md`
+to find which directories a context holds.
 
 No context has its own `docs/adr/` yet. Update the structure above when a context is
 added or gets its own ADRs.
