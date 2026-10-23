@@ -15,6 +15,7 @@
 - Terraform 1.10 or later. The S3 backends use `use_lockfile`, which needs 1.10.
 - GNU Make, to provision the Hetzner roots in the correct order.
 - Ansible, to configure the hosts.
+- Atmos, to plan and apply a root through its stack.
 
 ### AWS credentials
 
@@ -81,6 +82,26 @@ Do not do these steps when the bucket exists. Use `terraform init` and `terrafor
 cd live/hetzner/ovpn/bootstrap
 HCLOUD_TOKEN=$OVPN_HCLOUD_TOKEN terraform apply
 ```
+
+## Atmos
+
+Atmos orchestrates each root through a stack, in `atmos.yaml` and `stacks/`. It
+wraps the same Terraform roots and backends; it does not replace the Makefiles,
+which still hold the apply order for the Hetzner roots.
+
+| Stack | Covers |
+|---|---|
+| `aws-management` | `live/aws/management/network`, `live/aws/management/nextcloud` |
+| `hetzner-ovpn` | `live/hetzner/ovpn/network`, `openvpn`, `private_hosts` |
+| `hetzner-honeynet` | `live/hetzner/honeynet/network`, `sensor`, `honeypots` |
+
+```sh
+atmos terraform plan aws/management/network -s aws-management
+atmos terraform apply hetzner/ovpn/openvpn -s hetzner-ovpn
+```
+
+The `bootstrap` roots and `jenkins` have no stack entry. Run them with plain
+Terraform, as in [Bootstrap a new state bucket](#bootstrap-a-new-state-bucket).
 
 ## OVPN provisioning
 
