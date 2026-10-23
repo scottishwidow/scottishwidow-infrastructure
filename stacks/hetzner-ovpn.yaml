@@ -1,0 +1,7 @@
+components:
+  terraform:
+    hetzner/ovpn/network: {}
+    hetzner/ovpn/openvpn:
+      vars: !include ../live/hetzner/ovpn/openvpn/terraform.tfvars
+    hetzner/ovpn/private_hosts:
+      vars: !include ../live/hetzner/ovpn/private_hosts/terraform.tfvars
