@@ -1,11 +1,11 @@
 # Honeynet
 
-The `honeynet` environment: hosts that invite attacks so that Suricata has real hostile traffic to inspect. It is hostile by design and shares nothing with the other environments.
+The `honeynet` environment: hosts that invite attacks so that Suricata has real hostile traffic to inspect. It is hostile by design. No other environment has a path into it, and its only path out is the Sensor's write-only path to the Corpus.
 
 ## Language
 
 **Honeynet**:
-The isolated set of hosts that attract and observe attacks. It has its own Hetzner project, network and SSH key, and no path to any other environment.
+The isolated set of hosts that attract and observe attacks. It has its own Hetzner project, network and SSH key. No other environment has a path into it, and its only path out is the Sensor's write-only path to the Corpus.
 _Avoid_: Lab, sandbox, DMZ
 
 **Honeypot**:
@@ -31,3 +31,19 @@ _Avoid_: Data control, egress filtering, sandboxing
 **Sinkhole**:
 The fake internet service that answers a Honeypot's outbound HTTP, HTTPS and DNS in place of the real destination. A connection to the Sinkhole never leaves the Honeynet, so Containment still holds.
 _Avoid_: Fake internet, INetSim, egress proxy
+
+**Session Evidence**:
+The record of what an intruder typed, tried and downloaded on a Honeypot. Cowrie and OpenCanary write it.
+_Avoid_: Transcript, capture, payload, session log
+
+**Corpus**:
+The retained telemetry from every Honeynet source. It is held outside the Honeynet hosts and outlives any of them.
+_Avoid_: Data lake, archive, log store, warehouse
+
+**Hunt**:
+A search for hostile activity that starts from a hypothesis and is written as SQL against the Corpus.
+_Avoid_: Investigation, triage, analysis, threat hunt
+
+**Hunt Host**:
+The host that queries the Corpus. It is not a Honeynet host, it holds a credential, and it is stopped when no Hunt runs.
+_Avoid_: Analysis box, jump host, workstation
