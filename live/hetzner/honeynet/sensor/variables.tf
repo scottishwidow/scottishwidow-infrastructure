@@ -90,8 +90,14 @@ variable "sinkhole_ports" {
   }
 }
 
+variable "sensor_ipv4_name" {
+  description = "Name of the Sensor primary IPv4 that the bootstrap root owns"
+  type        = string
+  default     = "sensor-ipv4"
+}
+
 variable "location" {
-  description = "Hetzner location of the Sensor and its primary IPv4"
+  description = "Hetzner location of the Sensor"
   type        = string
   default     = "fsn1"
 }
