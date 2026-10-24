@@ -108,7 +108,7 @@ Do the [prerequisites](../../../README.md#prerequisites) first. The Honeynet kee
 
 1. Create a key pair for the Honeynet only, at `~/.ssh/honeynet`. Do not use a key that is trusted elsewhere.
 2. Set `admin_cidrs` in `sensor/terraform.tfvars`. This file is not in Git.
-3. Apply `bootstrap` once. It creates the Hetzner SSH key and keeps its state locally:
+3. Apply `bootstrap` once. It creates the Hetzner SSH key and the Sensor public IPv4, and keeps its state locally:
 
    ```sh
    make init-bootstrap apply-bootstrap
@@ -123,7 +123,7 @@ Do the [prerequisites](../../../README.md#prerequisites) first. The Honeynet kee
    make verify     # runs verify.yml
    ```
 
-`make destroy` removes the roots in the reverse order. It does not remove `bootstrap`.
+`make destroy` removes the roots in the reverse order. It does not remove `bootstrap`, so the Sensor keeps its address across a destroy and a new apply. To move an address that an older revision created in the `sensor` root, follow [the address move runbook](../../../docs/runbooks/honeynet-sensor-address-move.md).
 
 ## Operation
 

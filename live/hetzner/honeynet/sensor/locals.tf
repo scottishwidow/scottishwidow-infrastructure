@@ -35,7 +35,7 @@ locals {
     admin_ssh_port       = var.admin_ssh_port
     network_ip_range     = data.hcloud_network.honeynet.ip_range
     network_gateway_ip   = cidrhost(data.hcloud_network.honeynet.ip_range, 1)
-    public_ipv4          = hcloud_primary_ip.sensor.ip_address
+    public_ipv4          = data.hcloud_primary_ip.sensor.ip_address
     sensor_private_ip    = var.sensor_private_ip
     honeypot_ip          = var.honeypot_1_private_ip
     dnat_rules           = local.dnat_rules

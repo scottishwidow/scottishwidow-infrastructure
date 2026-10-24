@@ -1,5 +1,5 @@
 output "sensor_public_ipv4" {
-  value = hcloud_primary_ip.sensor.ip_address
+  value = data.hcloud_primary_ip.sensor.ip_address
 }
 
 output "sensor_private_ip" {
@@ -11,7 +11,7 @@ output "ansible_inventory" {
     sensors = {
       hosts = {
         sensor = {
-          ansible_host = hcloud_primary_ip.sensor.ip_address
+          ansible_host = data.hcloud_primary_ip.sensor.ip_address
           ansible_port = var.admin_ssh_port
         }
       }

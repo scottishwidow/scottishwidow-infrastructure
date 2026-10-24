@@ -5,3 +5,7 @@ data "hcloud_network" "honeynet" {
 data "hcloud_ssh_key" "honeynet" {
   name = var.ssh_key_name
 }
+
+data "hcloud_primary_ip" "sensor" {
+  name = var.sensor_ipv4_name
+}
