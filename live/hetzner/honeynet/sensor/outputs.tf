@@ -23,6 +23,7 @@ output "ansible_inventory" {
         sensor_private_ip                  = module.sensor.private_ip
         proxy_port                         = var.proxy_port
         sinkhole_redirects                 = local.sinkhole_redirects
+        log_volume_device                  = module.sensor_log_volume.linux_device
       }
     }
   }
