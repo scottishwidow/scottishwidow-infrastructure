@@ -123,11 +123,11 @@ Do the [prerequisites](../../../README.md#prerequisites) first. The Honeynet kee
 
    ```sh
    make init
-   make apply      # network, sensor, honeypots
+   make apply      # corpus, network, sensor, honeypots
    make configure  # writes the inventory, runs site.yml
    make verify     # runs verify.yml
    ```
-`make destroy` removes the roots in the reverse order. It does not remove `bootstrap`, so the Sensor keeps its address across a destroy and a new apply. To move an address that an older revision created in the `sensor` root, follow [the address move runbook](../../../docs/runbooks/honeynet-sensor-address-move.md).
+`make destroy` removes the disposable roots in the reverse order. It does not remove `bootstrap`, so the Sensor keeps its address across a destroy and a new apply, and it does not remove `corpus`, so the Corpus keeps 13 months of telemetry. See [ADR-0022](../../../docs/adr/0022-the-corpus-outlives-the-honeynet.md). To move an address that an older revision created in the `sensor` root, follow [the address move runbook](../../../docs/runbooks/honeynet-sensor-address-move.md).
 
 ## Operation
 
