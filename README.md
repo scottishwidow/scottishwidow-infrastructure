@@ -93,7 +93,7 @@ which still hold the apply order for the Hetzner roots.
 |---|---|
 | `aws-management` | `live/aws/management/network`, `live/aws/management/nextcloud` |
 | `hetzner-ovpn` | `live/hetzner/ovpn/network`, `openvpn`, `private_hosts` |
-| `hetzner-honeynet` | `live/hetzner/honeynet/network`, `sensor`, `honeypots` |
+| `honeynet` | `live/hetzner/honeynet/network`, `sensor`, `honeypots` |
 
 ```sh
 atmos terraform plan aws/management/network -s aws-management
