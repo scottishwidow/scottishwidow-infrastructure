@@ -27,7 +27,7 @@ The Terraform roots keep their state in S3 buckets in `eu-central-1`:
 | `live/aws/management/network` | `tf-state-scottishwidow-management`, key `mgmt/network/terraform.tfstate` |
 | `live/aws/management/nextcloud` | `tf-state-scottishwidow-management`, key `mgmt/nextcloud/terraform.tfstate` |
 | `live/hetzner/ovpn/*` | `tf-state-scottishwidow-hetzner`, keys under `ovpn/` |
-| `live/hetzner/honeynet/*` | `tf-state-scottishwidow-hetzner`, keys under `honeynet/` |
+| `live/hetzner/honeynet/*`, `live/aws/honeynet/*` | `tf-state-scottishwidow-hetzner`, keys under `honeynet/` |
 
 The credentials must be able to read, write and delete objects in the bucket, including the `.tflock` lock file.
 
@@ -93,7 +93,7 @@ which still hold the apply order for the Hetzner roots.
 |---|---|
 | `aws-management` | `live/aws/management/network`, `live/aws/management/nextcloud` |
 | `hetzner-ovpn` | `live/hetzner/ovpn/network`, `openvpn`, `private_hosts` |
-| `honeynet` | `live/hetzner/honeynet/network`, `sensor`, `honeypots` |
+| `honeynet` | `live/aws/honeynet/corpus`, `live/hetzner/honeynet/network`, `sensor`, `honeypots` |
 
 ```sh
 atmos terraform plan aws/management/network -s aws-management
