@@ -8,6 +8,11 @@ APPLY_ORDER   := network sensor honeypots
 DESTROY_ORDER := honeypots sensor network
 ALL_STACKS    := bootstrap $(APPLY_ORDER)
 
+DIR_bootstrap  := bootstrap
+DIR_network    := network
+DIR_sensor     := sensor
+DIR_honeypots  := honeypots
+
 export HCLOUD_TOKEN := $(HONEYNET_HCLOUD_TOKEN)
 
 export TF_VAR_honeypot_1_private_ip := 10.20.0.11
@@ -25,8 +30,8 @@ destroy: $(addprefix destroy-,$(DESTROY_ORDER))
 
 inventory:
 	$(call require_env)
-	$(TERRAFORM) -chdir=sensor output -json ansible_inventory > ansible/inventory/sensor.json.tmp
-	$(TERRAFORM) -chdir=honeypots output -json ansible_inventory > ansible/inventory/honeypots.json.tmp
+	$(TERRAFORM) -chdir=$(call stack_dir,sensor) output -json ansible_inventory > ansible/inventory/sensor.json.tmp
+	$(TERRAFORM) -chdir=$(call stack_dir,honeypots) output -json ansible_inventory > ansible/inventory/honeypots.json.tmp
 	mv ansible/inventory/sensor.json.tmp ansible/inventory/sensor.json
 	mv ansible/inventory/honeypots.json.tmp ansible/inventory/honeypots.json
 	rm -f ansible/.known_hosts
@@ -39,23 +44,19 @@ verify:
 
 init-%:
 	$(call require_env)
-	$(call require_stack,$*,$(ALL_STACKS))
-	$(TERRAFORM) -chdir=$* init -input=false $(TF_ARGS)
+	$(TERRAFORM) -chdir=$(call stack_dir,$*) init -input=false $(TF_ARGS)
 
 plan-%:
 	$(call require_env)
-	$(call require_stack,$*,$(ALL_STACKS))
-	$(TERRAFORM) -chdir=$* plan $(TF_ARGS)
+	$(TERRAFORM) -chdir=$(call stack_dir,$*) plan $(TF_ARGS)
 
 apply-%:
 	$(call require_env)
-	$(call require_stack,$*,$(ALL_STACKS))
-	$(TERRAFORM) -chdir=$* apply $(TF_ARGS)
+	$(TERRAFORM) -chdir=$(call stack_dir,$*) apply $(TF_ARGS)
 
 destroy-%:
 	$(call require_env)
-	$(call require_stack,$*,$(ALL_STACKS))
-	$(TERRAFORM) -chdir=$* destroy $(TF_ARGS)
+	$(TERRAFORM) -chdir=$(call stack_dir,$*) destroy $(TF_ARGS)
 
-require_stack = $(if $(filter $(1),$(2)),,$(error Unknown stack '$(1)'. Allowed: $(2)))
-require_env   = $(foreach var,$(REQUIRED_ENV),$(if $($(var)),,$(error $(var) is not set)))
+stack_dir   = $(or $(DIR_$(1)),$(error Unknown stack '$(1)'. Allowed: $(ALL_STACKS)))
+require_env = $(foreach var,$(REQUIRED_ENV),$(if $($(var)),,$(error $(var) is not set)))
