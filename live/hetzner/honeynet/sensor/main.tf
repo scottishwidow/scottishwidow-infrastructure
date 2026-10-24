@@ -47,3 +47,13 @@ module "sensor" {
   user_data       = local.sensor_user_data
   labels          = local.sensor_labels
 }
+
+module "sensor_log_volume" {
+  source = "../../../../modules/hcloud_volume"
+
+  name      = var.sensor_log_volume_name
+  size      = var.sensor_log_volume_size
+  location  = var.location
+  server_id = module.sensor.server_id
+  labels    = local.sensor_labels
+}
