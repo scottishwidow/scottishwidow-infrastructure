@@ -7,6 +7,7 @@ crash.*.log
 
 *.tfvars
 *.tfvars.json
+!live/aws/honeynet/corpus/sensor.auto.tfvars
 
 override.tf
 override.tf.json
@@ -31,3 +32,4 @@ live/hetzner/ovpn/ansible/clients/
 
 live/hetzner/honeynet/ansible/inventory/*.json*
 live/hetzner/honeynet/ansible/.known_hosts
+live/hetzner/honeynet/pki/
