@@ -3,6 +3,7 @@ import:
 
 components:
   terraform:
+    aws/honeynet/corpus: {}
     hetzner/honeynet/network: {}
     hetzner/honeynet/sensor:
       vars: !include ../live/hetzner/honeynet/sensor/terraform.tfvars
